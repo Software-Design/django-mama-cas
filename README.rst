@@ -1,8 +1,9 @@
 MamaCAS
 =======
 
-.. image:: https://travis-ci.org/jbittel/django-mama-cas.png?branch=master
-    :target: https://travis-ci.org/jbittel/django-mama-cas
+This is only a small fix for `github.com/jbittel/django-mama-cas`_ to be
+compatible with Django 3.
+We will not further maintain this repo.
 
 MamaCAS is a Django `Central Authentication Service (CAS)`_ single sign-on
 and single logout server. It implements the CAS 1.0, 2.0 and 3.0 protocols,
