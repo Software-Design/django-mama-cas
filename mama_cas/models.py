@@ -210,7 +210,12 @@ class ServiceTicketManager(TicketManager):
         be sent. Otherwise, synchronous requests will be sent.
         """
         session = Session()
-        for ticket in self.filter(user=user, consumed__gte=user.last_login):
+        session_life_time = getattr(settings, 'SESSION_COOKIE_AGE', None)
+        if session_life_time is not None:
+            ticket_consumed_since = now() - timedelta(seconds=int(session_life_time))
+        else:
+            ticket_consumed_since = user.last_login
+        for ticket in self.filter(user=user, consumed__gte=ticket_consumed_since):
             try:
                 ticket.request_sign_out(session=session)
             except Exception:

@@ -1,8 +1,10 @@
 MamaCAS
 =======
 
-This is only a small fix for `github.com/jbittel/django-mama-cas`_ to be
-compatible with Django 3.
+This is only a small fix for `github.com/jbittel/django-mama-cas`_, making
+single sign out requests invalidate each ticket since SESSION_COOKIE_AGE
+instead of user.last_login
+
 We will not further maintain this repo.
 
 MamaCAS is a Django `Central Authentication Service (CAS)`_ single sign-on
