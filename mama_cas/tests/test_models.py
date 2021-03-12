@@ -1,5 +1,5 @@
 from datetime import timedelta
-from mock import patch
+from unittest.mock import patch
 import re
 
 from django.test import TestCase
@@ -276,6 +276,18 @@ class ServiceTicketManagerTests(TestCase):
         ServiceTicketFactory(consume=True)
         with patch('requests.Session.post') as mock:
             mock.return_value.status_code = 200
+            ServiceTicket.objects.request_sign_out(self.user)
+            self.assertEqual(mock.call_count, 2)
+
+    def test_request_sign_out_exception(self):
+        """
+        If a sign-out request to a service raises an exception,
+        it shouldn't stop the rest.
+        """
+        ServiceTicketFactory(consume=True)
+        ServiceTicketFactory(consume=True)
+        with patch('requests.Session.post') as mock:
+            mock.side_effect = requests.exceptions.RequestException
             ServiceTicket.objects.request_sign_out(self.user)
             self.assertEqual(mock.call_count, 2)
 

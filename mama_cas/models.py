@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-
 from datetime import timedelta
 import logging
 import os
@@ -130,8 +128,8 @@ class TicketManager(models.Manager):
         A custom management command is provided that executes this method
         on all applicable models by running ``manage.py cleanupcas``.
         """
-        for ticket in self.filter(Q(consumed__isnull=False) |
-                                  Q(expires__lte=now())).order_by('-expires'):
+        for ticket in self.filter(Q(consumed__isnull=False)
+                                  | Q(expires__lte=now())).order_by('-expires'):
             try:
                 ticket.delete()
             except models.ProtectedError:
@@ -213,7 +211,13 @@ class ServiceTicketManager(TicketManager):
         """
         session = Session()
         for ticket in self.filter(user=user, consumed__gte=user.last_login):
-            ticket.request_sign_out(session=session)
+            try:
+                ticket.request_sign_out(session=session)
+            except Exception:
+                logger.exception(
+                    "Error sending the logout request for %s",
+                    ticket.service,
+                )
 
 
 class ServiceTicket(Ticket):
